@@ -24,6 +24,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>myRetail</finalName>
 	</build>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/asm/asm -->
@@ -56,12 +57,12 @@
 			<artifactId>jersey-core</artifactId>
 			<version>1.19.3</version>
 		</dependency>
-<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
-<dependency>
-    <groupId>org.mongodb</groupId>
-    <artifactId>mongo-java-driver</artifactId>
-    <version>3.4.2</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>3.4.2</version>
+		</dependency>
 
 	</dependencies>
 </project>

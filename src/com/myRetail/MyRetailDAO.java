@@ -2,6 +2,7 @@ package com.myRetail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -9,23 +10,32 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.myRetail.exception.GenericException;
+import com.myRetail.exception.ProductSearchException;
+import com.myRetail.model.Price;
+import com.myRetail.model.Product;
+import com.myRetail.util.Utility;
 
 public class MyRetailDAO {
 	private static String DB = "myRetail";
 	private static String COLLECTION = "price";
+	ResourceBundle bundle = ResourceBundle.getBundle("retail");
 
 	public Product findById(int id) {
-		//15117729, 16483589, 16696652, 16752456, 15643793) 
+		boolean found = false;
 		for(Product product : createDummyProducts()){
 			if(id == product.getId()){
 				return product;
 			}
 		}
+		if(!found){
+			throw new ProductSearchException(bundle.getString("noproduct")+id);
+		}
 		return null;
 	}
 
 	public List<Product> createDummyProducts(){
-		MongoClient mongoClient = ConnectionHelper.dbConnect();
+		MongoClient mongoClient = Utility.dbConnect();
 		@SuppressWarnings("deprecation")
 		DB db = mongoClient.getDB(DB);
 		DBCollection collection = db.getCollection(COLLECTION);
@@ -46,13 +56,36 @@ public class MyRetailDAO {
 		price = getPrice(newProductCursor);
 		product.setCurrent_price(price);
 		list.add(product);
+		
+		product = new Product();
+		product.setId(16696652);
+		product.setName("Friday");
+		newProductCursor = collection.find(new BasicDBObject().append("_id", product.getId()));
+		price = getPrice(newProductCursor);
+		product.setCurrent_price(price);
+		list.add(product);
+		
+		product = new Product();
+		product.setId(15643793);
+		product.setName("Half Baked");
+		newProductCursor = collection.find(new BasicDBObject().append("_id", product.getId()));
+		price = getPrice(newProductCursor);
+		product.setCurrent_price(price);
+		list.add(product);
+		
+		product = new Product();
+		product.setId(13860428);
+		product.setName("Pineapple Express");
+		newProductCursor = collection.find(new BasicDBObject().append("_id", product.getId()));
+		price = getPrice(newProductCursor);
+		product.setCurrent_price(price);
+		list.add(product);
 
-		ConnectionHelper.closeDB(mongoClient);
+		Utility.closeDB(mongoClient);
 
 		return list;
 
 	}
-
 
 	private Price getPrice(DBCursor cursor){
 		List<Price> result = new ArrayList<Price>();
@@ -69,7 +102,7 @@ public class MyRetailDAO {
 	}
 
 	public List<Price> createDummyPriceData() {
-		MongoClient mongoClient = ConnectionHelper.dbConnect();
+		MongoClient mongoClient = Utility.dbConnect();
 		@SuppressWarnings("deprecation")
 		DB db = mongoClient.getDB(DB);
 		DBCollection collection = db.getCollection(COLLECTION);
@@ -104,27 +137,43 @@ public class MyRetailDAO {
 		document.put("value", 13.49);
 		document.put("currency_code", "USD");
 		collection.insert(document);
+		
+		DBCursor cursor = collection.find();
+		List<Price> result = new ArrayList<Price>();
+		while (cursor.hasNext()) {
+			Price product = new Price();
+			DBObject obj = new BasicDBObject();
+			obj = cursor.next();
+			product.set_id(obj.get("_id") == null ? 0 : Integer.parseInt(obj.get("_id").toString()));
+			product.setValue(obj.get("value") == null ? 0 : Double.parseDouble(obj.get("value").toString()));
+			product.setCurrency_code(obj.get("currency_code") == null ? "" : obj.get("currency_code").toString());
+			result.add(product);
+		}
 
-		ConnectionHelper.closeDB(mongoClient);
-		return null;
+		Utility.closeDB(mongoClient);
+		return result;
 	}
 
 	public String findNameById(int id) {
+		boolean found = false;
 		for(Product product : createDummyProducts()){
 			if(id == product.getId()){
 				return product.getName();
 			}
 		}
+		if(!found){
+			throw new GenericException(bundle.getString("generalMessage"));
+		}
 		return "";
 	}
 
 	public Product update(int id,Product product) {
-		MongoClient mongoClient = ConnectionHelper.dbConnect();
+		MongoClient mongoClient = Utility.dbConnect();
 		@SuppressWarnings("deprecation")
 		DB db = mongoClient.getDB(DB);
 		DBCollection collection = db.getCollection(COLLECTION);
 		BasicDBObject updateDocument = new BasicDBObject();
-		if(id == product.getId()){
+		if(id == product.getId() && null!=product.getCurrent_price() && 0.0!=product.getCurrent_price().getValue() && ""!=product.getCurrent_price().getCurrency_code()){
 			Price price = product.getCurrent_price();
 			updateDocument.put("value", price.getValue());
 			updateDocument.put("currency_code", price.getCurrency_code());
@@ -133,8 +182,10 @@ public class MyRetailDAO {
 			DBCursor newProductCursor = collection.find(new BasicDBObject().append("_id", product.getId()));
 			price = getPrice(newProductCursor);
 			product.setCurrent_price(price);
+		}else{
+			throw new GenericException(bundle.getString("generalMessage"));
 		}
-		ConnectionHelper.closeDB(mongoClient);
+		Utility.closeDB(mongoClient);
 		return product;
 	}
 

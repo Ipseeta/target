@@ -1,9 +1,17 @@
-package com.myRetail;
+package com.myRetail.model;
+
+import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
+/**
+ * Price POJO class
+ * @author ipseeta
+ *
+ */
 @XmlRootElement
-public class Price {
+public class Price implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private int _id;
 	private double value;
 	private String currency_code;
@@ -25,6 +33,10 @@ public class Price {
 	}
 	public void setCurrency_code(String currency_code) {
 		this.currency_code = currency_code;
+	}
+	@Override
+	public String toString() {
+		return "Price [value=" + value + ", currency_code=" + currency_code + "]";
 	}
 
 }
