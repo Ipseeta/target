@@ -101,7 +101,7 @@ public class MyRetailDAO {
 		return result.get(0);
 	}
 
-	public List<Price> createDummyPriceData() {
+	public String createDummyPriceData() {
 		MongoClient mongoClient = Utility.dbConnect();
 		@SuppressWarnings("deprecation")
 		DB db = mongoClient.getDB(DB);
@@ -137,21 +137,9 @@ public class MyRetailDAO {
 		document.put("value", 13.49);
 		document.put("currency_code", "USD");
 		collection.insert(document);
-		
-		DBCursor cursor = collection.find();
-		List<Price> result = new ArrayList<Price>();
-		while (cursor.hasNext()) {
-			Price product = new Price();
-			DBObject obj = new BasicDBObject();
-			obj = cursor.next();
-			product.set_id(obj.get("_id") == null ? 0 : Integer.parseInt(obj.get("_id").toString()));
-			product.setValue(obj.get("value") == null ? 0 : Double.parseDouble(obj.get("value").toString()));
-			product.setCurrency_code(obj.get("currency_code") == null ? "" : obj.get("currency_code").toString());
-			result.add(product);
-		}
 
 		Utility.closeDB(mongoClient);
-		return result;
+		return "Created";
 	}
 
 	public String findNameById(int id) {

@@ -1,7 +1,5 @@
 package com.myRetail;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -11,7 +9,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.myRetail.model.Price;
 import com.myRetail.model.Product;
 
 /**
@@ -41,10 +38,10 @@ public class MyRetailService {
 	 * It is a dummy method called only once to create price data in database
 	 */
 	@GET @Path("/create")
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({ MediaType.APPLICATION_JSON})
 	public Response createDummyPriceData(){
-		List<Price> price = dao.createDummyPriceData();
-		return Response.status(200).entity(price).build();
+		String success = dao.createDummyPriceData();
+		return Response.status(200).entity(success).build(); 
 	}
 	/**
 	 * Find product name by its id
