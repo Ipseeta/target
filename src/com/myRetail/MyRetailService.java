@@ -41,7 +41,7 @@ public class MyRetailService {
 	@Produces({ MediaType.APPLICATION_JSON})
 	public Response createDummyPriceData(){
 		String success = dao.createDummyPriceData();
-		return Response.status(200).entity(success).build(); 
+		return Response.status(201).entity(success).build(); 
 	}
 	/**
 	 * Find product name by its id
