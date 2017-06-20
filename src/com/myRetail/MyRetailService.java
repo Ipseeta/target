@@ -1,6 +1,7 @@
 package com.myRetail;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -70,5 +71,14 @@ public class MyRetailService {
 		Product updatedProduct = dao.update(Integer.parseInt(id),product);
         return Response.status(200).entity(updatedProduct).build(); 
     }
-
+	/**
+	 * Delete a price entry from mongodb
+	 * @param id
+	 * @return
+	 */
+	@DELETE @Path("delete/{id}")
+	public void delete(@PathParam("id") String id) {
+		dao.delete(Integer.parseInt(id));
+    }
+	
 }

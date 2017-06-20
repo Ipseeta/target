@@ -11,6 +11,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.myRetail.exception.GenericException;
+import com.myRetail.exception.ProductDeletionException;
 import com.myRetail.exception.ProductSearchException;
 import com.myRetail.model.Price;
 import com.myRetail.model.Product;
@@ -175,6 +176,19 @@ public class MyRetailDAO {
 		}
 		Utility.closeDB(mongoClient);
 		return product;
+	}
+
+	public void delete(int id) {
+		MongoClient mongoClient = Utility.dbConnect();
+		@SuppressWarnings("deprecation")
+		DB db = mongoClient.getDB(DB);
+		BasicDBObject whereQuery = new BasicDBObject()
+				.append("_id", id);
+		DBObject dbObj = db.getCollection(COLLECTION).findAndRemove(whereQuery);
+		if(null == dbObj){
+			throw new ProductDeletionException("No such product exists");
+		}
+		Utility.closeDB(mongoClient);
 	}
 
 }

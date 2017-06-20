@@ -23,6 +23,7 @@ public class RESTfulJerseyClient {
 		getByIdTest(webResource);
 		getNameByIdTest(webResource);
 		updatePriceTest(webResource);
+		deleteTest(webResource);
 		
 	}
 	
@@ -61,6 +62,15 @@ public class RESTfulJerseyClient {
 		product.setCurrent_price(price);
 		ClientResponse response = webResource.path("16483589").accept(MediaType.APPLICATION_JSON).put(ClientResponse.class,product);
 		if (response.getStatus() != 200) {
+			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+		}
+		String output = response.getEntity(String.class);
+		System.out.println(output);
+	}
+	
+	private static void deleteTest(WebResource webResource){
+		ClientResponse response = webResource.path("delete").path("16483589").get(ClientResponse.class);
+		if (response.getStatus() != 202) {
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 		}
 		String output = response.getEntity(String.class);
