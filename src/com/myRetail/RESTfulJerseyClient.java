@@ -19,16 +19,35 @@ public class RESTfulJerseyClient {
 	public static void main(String[] args) {
 		Client client = Client.create();
 		WebResource webResource = client.resource(webServiceURI);
-		createDummyPriceTest(webResource);
+		//createDummyPriceTest(webResource);
+		getTest(webResource);
 		getByIdTest(webResource);
 		getNameByIdTest(webResource);
 		updatePriceTest(webResource);
-		deleteTest(webResource);
+		//deleteTest(webResource);
 		
 	}
 	
+	private static void getTest(WebResource webResource) {
+		ClientResponse response = webResource.get(ClientResponse.class);
+		if (response.getStatus() != 200) {
+			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+		}
+		String output = response.getEntity(String.class);
+		System.out.println(output);
+		
+	}
+
 	private static void createDummyPriceTest(WebResource webResource){
-		ClientResponse response = webResource.path("create").get(ClientResponse.class);
+		Price p = new Price();
+		p.set_id(16483589);
+		p.setCurrency_code("USD");
+		p.setValue(13.49);
+		//String input = "{\"currency_code\":\"USD\",\"_id\":\"16483589\",\"value\":\"13.49\"}";
+		ClientResponse response = webResource.path("create").type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class,p);
+		if (response.getStatus() != 201) {
+			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+		}
 		String output = response.getEntity(String.class);
 		System.out.println(output);
 	}

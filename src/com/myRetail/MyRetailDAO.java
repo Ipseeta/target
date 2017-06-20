@@ -102,42 +102,47 @@ public class MyRetailDAO {
 		return result.get(0);
 	}
 
-	public String createDummyPriceData() {
+	public String createPriceData(Price p) {
 		MongoClient mongoClient = Utility.dbConnect();
 		@SuppressWarnings("deprecation")
 		DB db = mongoClient.getDB(DB);
 		DBCollection collection = db.getCollection(COLLECTION);
 		BasicDBObject document = new BasicDBObject();
-
-		document.put("_id", 15117729);
-		document.put("value", 13.49);
-		document.put("currency_code", "USD");
+		
+		document.put("_id", p.get_id());
+		document.put("value", p.getValue());
+		document.put("currency_code", p.getCurrency_code());
 		collection.insert(document);
-
-		document.put("_id", 16483589);
-		document.put("value", 13.49);
-		document.put("currency_code", "USD");
-		collection.insert(document);
-
-		document.put("_id", 16696652);
-		document.put("value", 13.49);
-		document.put("currency_code", "USD");
-		collection.insert(document);
-
-		document.put("_id", 16752456);
-		document.put("value", 13.49);
-		document.put("currency_code", "USD");
-		collection.insert(document);
-
-		document.put("_id", 15643793);
-		document.put("value", 13.49);
-		document.put("currency_code", "USD");
-		collection.insert(document);
-
-		document.put("_id", 13860428);
-		document.put("value", 13.49);
-		document.put("currency_code", "USD");
-		collection.insert(document);
+		
+//		document.put("_id", 15117729);
+//		document.put("value", 13.49);
+//		document.put("currency_code", "USD");
+//		collection.insert(document);
+//
+//		document.put("_id", 16483589);
+//		document.put("value", 13.49);
+//		document.put("currency_code", "USD");
+//		collection.insert(document);
+//
+//		document.put("_id", 16696652);
+//		document.put("value", 13.49);
+//		document.put("currency_code", "USD");
+//		collection.insert(document);
+//
+//		document.put("_id", 16752456);
+//		document.put("value", 13.49);
+//		document.put("currency_code", "USD");
+//		collection.insert(document);
+//
+//		document.put("_id", 15643793);
+//		document.put("value", 13.49);
+//		document.put("currency_code", "USD");
+//		collection.insert(document);
+//
+//		document.put("_id", 13860428);
+//		document.put("value", 13.49);
+//		document.put("currency_code", "USD");
+//		collection.insert(document);
 
 		Utility.closeDB(mongoClient);
 		return "Created";

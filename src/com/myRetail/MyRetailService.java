@@ -1,15 +1,20 @@
 package com.myRetail;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.myRetail.model.Price;
 import com.myRetail.model.Product;
 
 /**
@@ -21,6 +26,14 @@ import com.myRetail.model.Product;
 public class MyRetailService {
 	
 	MyRetailDAO dao = new MyRetailDAO();
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public Response findAll() {
+		List<Product> product = dao.createDummyProducts();
+		GenericEntity<List<Product>> entity = new GenericEntity<List<Product>>(product) {};
+		return Response.ok(entity).build(); 
+	}
 	/**
 	 * Get product details by product id
 	 * @param id request param
@@ -38,10 +51,10 @@ public class MyRetailService {
 	/**
 	 * It is a dummy method called only once to create price data in database
 	 */
-	@GET @Path("/create")
-	@Produces({ MediaType.APPLICATION_JSON})
-	public Response createDummyPriceData(){
-		String success = dao.createDummyPriceData();
+	@POST @Path("/create")
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public Response createPriceData(Price price){
+		String success = dao.createPriceData(price);
 		return Response.status(201).entity(success).build(); 
 	}
 	/**
@@ -50,7 +63,7 @@ public class MyRetailService {
 	 * @return name of the product
 	 */
 	@GET @Path("name/{id}")
-	@Produces({ MediaType.APPLICATION_JSON})
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response findNameById(@PathParam("id") String id) {
 		String name = dao.findNameById(Integer.parseInt(id));
 		return Response.status(200).entity(name).build(); 
