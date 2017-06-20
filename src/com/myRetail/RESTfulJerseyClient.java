@@ -19,12 +19,12 @@ public class RESTfulJerseyClient {
 	public static void main(String[] args) {
 		Client client = Client.create();
 		WebResource webResource = client.resource(webServiceURI);
-		//createDummyPriceTest(webResource);
+		createDummyPriceTest(webResource);
 		getTest(webResource);
 		getByIdTest(webResource);
 		getNameByIdTest(webResource);
 		updatePriceTest(webResource);
-		//deleteTest(webResource);
+		deleteTest(webResource);
 		
 	}
 	
