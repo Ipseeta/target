@@ -69,7 +69,8 @@ public class RESTfulJerseyClient {
 	}
 	
 	private static void deleteTest(WebResource webResource){
-		ClientResponse response = webResource.path("delete").path("16483589").get(ClientResponse.class);
+		
+		ClientResponse response = webResource.path("16483589").delete(ClientResponse.class);
 		if (response.getStatus() != 202) {
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 		}

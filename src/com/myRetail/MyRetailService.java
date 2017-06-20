@@ -76,9 +76,10 @@ public class MyRetailService {
 	 * @param id
 	 * @return
 	 */
-	@DELETE @Path("delete/{id}")
-	public void delete(@PathParam("id") String id) {
-		dao.delete(Integer.parseInt(id));
+	@DELETE @Path("{id}")
+	public Response delete(@PathParam("id") String id) {
+		String response = dao.delete(Integer.parseInt(id));
+		return Response.status(202).entity(response).build();
     }
 	
 }

@@ -178,7 +178,7 @@ public class MyRetailDAO {
 		return product;
 	}
 
-	public void delete(int id) {
+	public String delete(int id) {
 		MongoClient mongoClient = Utility.dbConnect();
 		@SuppressWarnings("deprecation")
 		DB db = mongoClient.getDB(DB);
@@ -189,6 +189,7 @@ public class MyRetailDAO {
 			throw new ProductDeletionException("No such product exists");
 		}
 		Utility.closeDB(mongoClient);
+		return "Deleted Successfully";
 	}
 
 }
