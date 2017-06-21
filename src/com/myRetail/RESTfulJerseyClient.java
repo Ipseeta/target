@@ -30,9 +30,8 @@ public class RESTfulJerseyClient {
 	
 	private static void getTest(WebResource webResource) {
 		ClientResponse response = webResource.get(ClientResponse.class);
-		if (response.getStatus() != 200) {
+		if (200 != response.getStatus())
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-		}
 		String output = response.getEntity(String.class);
 		System.out.println(output);
 		
@@ -45,9 +44,8 @@ public class RESTfulJerseyClient {
 		p.setValue(13.49);
 		//String input = "{\"currency_code\":\"USD\",\"_id\":\"16483589\",\"value\":\"13.49\"}";
 		ClientResponse response = webResource.path("create").type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class,p);
-		if (response.getStatus() != 201) {
+		if (201 != response.getStatus())
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-		}
 		String output = response.getEntity(String.class);
 		System.out.println(output);
 	}
@@ -63,9 +61,8 @@ public class RESTfulJerseyClient {
 	
 	private static void getNameByIdTest(WebResource webResource){
 		ClientResponse response = webResource.path("name").path("16483589").get(ClientResponse.class);
-		if (response.getStatus() != 200) {
+		if (200 != response.getStatus())
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-		}
 		String output = response.getEntity(String.class);
 		System.out.println(output);
 	}
@@ -80,9 +77,8 @@ public class RESTfulJerseyClient {
 		price.setValue(300.67);
 		product.setCurrent_price(price);
 		ClientResponse response = webResource.path("16483589").accept(MediaType.APPLICATION_JSON).put(ClientResponse.class,product);
-		if (response.getStatus() != 200) {
+		if (200 != response.getStatus())
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-		}
 		String output = response.getEntity(String.class);
 		System.out.println(output);
 	}
@@ -90,10 +86,9 @@ public class RESTfulJerseyClient {
 	private static void deleteTest(WebResource webResource){
 		
 		ClientResponse response = webResource.path("16483589").delete(ClientResponse.class);
-		if (response.getStatus() != 202) {
-			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-		}
-		String output = response.getEntity(String.class);
-		System.out.println(output);
+		if (202 == response.getStatus()) {
+			String output = response.getEntity(String.class);
+			System.out.println(output);
+		} else throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 	}
 }

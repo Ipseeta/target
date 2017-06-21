@@ -2,6 +2,7 @@ package com.myRetail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import com.mongodb.BasicDBObject;
@@ -24,15 +25,19 @@ public class MyRetailDAO {
 
 	public Product findById(int id) {
 		boolean found = false;
-		for(Product product : createDummyProducts()){
-			if(id == product.getId()){
-				return product;
-			}
+//		for(Product product : createDummyProducts()){
+//			if(id == product.getId()){
+//				return product;
+//			}
+//		}
+		createDummyProducts().stream()
+				.filter(product -> id == product.getId())
+				.forEach(product -> {});
+
+		if (found) {
+			return null;
 		}
-		if(!found){
-			throw new ProductSearchException(bundle.getString("noproduct")+id);
-		}
-		return null;
+		throw new ProductSearchException(bundle.getString("noproduct") + id);
 	}
 
 	public List<Product> createDummyProducts(){
@@ -89,11 +94,10 @@ public class MyRetailDAO {
 	}
 
 	private Price getPrice(DBCursor cursor){
-		List<Price> result = new ArrayList<Price>();
+		List<Price> result = new ArrayList<>();
 		while (cursor.hasNext()) {
 			Price product = new Price();
-			DBObject obj = new BasicDBObject();
-			obj = cursor.next();
+			DBObject obj = cursor.next();
 			product.set_id(obj.get("_id") == null ? 0 : Integer.parseInt(obj.get("_id").toString()));
 			product.setValue(obj.get("value") == null ? 0 : Double.parseDouble(obj.get("value").toString()));
 			product.setCurrency_code(obj.get("currency_code") == null ? "" : obj.get("currency_code").toString());
@@ -150,15 +154,17 @@ public class MyRetailDAO {
 
 	public String findNameById(int id) {
 		boolean found = false;
-		for(Product product : createDummyProducts()){
-			if(id == product.getId()){
-				return product.getName();
-			}
-		}
-		if(!found){
-			throw new GenericException(bundle.getString("generalMessage"));
-		}
-		return "";
+//		for(Product product : createDummyProducts()){
+//			if(id == product.getId()){
+//				return product.getName();
+//			}
+//		}
+		createDummyProducts().stream()
+				.filter(product -> id == product.getId())
+                .forEach(product1 -> product1.getName());
+		if (found)
+			return "";
+		throw new GenericException(bundle.getString("generalMessage"));
 	}
 
 	public Product update(int id,Product product) {
@@ -167,7 +173,7 @@ public class MyRetailDAO {
 		DB db = mongoClient.getDB(DB);
 		DBCollection collection = db.getCollection(COLLECTION);
 		BasicDBObject updateDocument = new BasicDBObject();
-		if(id == product.getId() && null!=product.getCurrent_price() && 0.0!=product.getCurrent_price().getValue() && ""!=product.getCurrent_price().getCurrency_code()){
+		if(id == product.getId() && null!=product.getCurrent_price() && 0.0!=product.getCurrent_price().getValue() && !Objects.equals("", product.getCurrent_price().getCurrency_code())){
 			Price price = product.getCurrent_price();
 			updateDocument.put("value", price.getValue());
 			updateDocument.put("currency_code", price.getCurrency_code());
@@ -176,9 +182,7 @@ public class MyRetailDAO {
 			DBCursor newProductCursor = collection.find(new BasicDBObject().append("_id", product.getId()));
 			price = getPrice(newProductCursor);
 			product.setCurrent_price(price);
-		}else{
-			throw new GenericException(bundle.getString("generalMessage"));
-		}
+		}else throw new GenericException(bundle.getString("generalMessage"));
 		Utility.closeDB(mongoClient);
 		return product;
 	}
@@ -190,9 +194,7 @@ public class MyRetailDAO {
 		BasicDBObject whereQuery = new BasicDBObject()
 				.append("_id", id);
 		DBObject dbObj = db.getCollection(COLLECTION).findAndRemove(whereQuery);
-		if(null == dbObj){
-			throw new ProductDeletionException("No such product exists");
-		}
+		if(null == dbObj) throw new ProductDeletionException("No such product exists");
 		Utility.closeDB(mongoClient);
 		return "Deleted Successfully";
 	}

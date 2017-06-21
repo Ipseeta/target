@@ -42,9 +42,7 @@ public class MyRetailService {
 	@GET @Path("{id}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response findById(@PathParam("id") String id) {
-		if(Integer.parseInt(id)  < 0){
-	        return Response.noContent().build();
-	    }
+		if(Integer.parseInt(id)  < 0) return Response.noContent().build();
 		Product product = dao.findById(Integer.parseInt(id));
 		return Response.status(200).entity(product).build(); 
 	}
@@ -78,9 +76,8 @@ public class MyRetailService {
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response updatePrice(@PathParam("id") String id,Product product) {
-		if(null == product.getCurrent_price()) {
-	        return Response.status(400).entity("Please provide the product price").build();
-	    }
+		if(null == product.getCurrent_price())
+			return Response.status(400).entity("Please provide the product price").build();
 		Product updatedProduct = dao.update(Integer.parseInt(id),product);
         return Response.status(200).entity(updatedProduct).build(); 
     }
